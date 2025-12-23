@@ -1,0 +1,80 @@
+{
+  "authority": {
+    "privateKey": "0001020304050607080900010203040506070809000102030405060708090001",
+    "description": "32-byte hex key"
+  },
+  "filteringCriteria": {
+    "allowedCity": "444555666",
+    "allowedRegion": "121314151",
+    "minBirthDate": "20071118",
+    "description": "Praha, vek >= 18"
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "VALID - Praha, 25 let, vote 3",
+      "expectedResult": "PASS",
+      "voter": {
+        "name": "Jan", "surname": "Novak", "address": "Hlavni 123",
+        "city": "444555666", "district": "111222333", "region": "121314151",
+        "country": "700800900", "dob": "19991215"
+      },
+      "vote": 3
+    },
+    {
+      "id": 2,
+      "name": "FAIL - Brno (nespravne mesto)",
+      "expectedResult": "FAIL",
+      "voter": {
+        "name": "Petra", "surname": "Svobodova", "address": "Masarykova",
+        "city": "111222333", "district": "100200300", "region": "888999000",
+        "country": "700800900", "dob": "19950320"
+      },
+      "vote": 2
+    },
+    {
+      "id": 3,
+      "name": "FAIL - Mlady volic (17 let)",
+      "expectedResult": "FAIL",
+      "voter": {
+        "name": "Tomas", "surname": "Maly", "address": "Nova",
+        "city": "444555666", "district": "111222333", "region": "121314151",
+        "country": "700800900", "dob": "20080501"
+      },
+      "vote": 1
+    },
+    {
+      "id": 4,
+      "name": "FAIL - Vote mimo rozsah (6)",
+      "expectedResult": "FAIL",
+      "voter": {
+        "name": "Lucie", "surname": "Horakova", "address": "Stara",
+        "city": "444555666", "district": "111222333", "region": "121314151",
+        "country": "700800900", "dob": "19880712"
+      },
+      "vote": 6
+    },
+    {
+      "id": 6,
+      "name": "VALID - Presne 18 let",
+      "expectedResult": "PASS",
+      "voter": {
+        "name": "Eva", "surname": "Nova", "address": "Kratka",
+        "city": "444555666", "district": "111222333", "region": "121314151",
+        "country": "700800900", "dob": "20071118"
+      },
+      "vote": 5
+    },
+    {
+      "id": 7,
+      "name": "FAIL - Spatny region",
+      "expectedResult": "FAIL",
+      "voter": {
+        "name": "Karel", "surname": "Vesely", "address": "Masarykova",
+        "city": "222333444", "district": "300400500", "region": "555666777",
+        "country": "700800900", "dob": "19850910"
+      },
+      "vote": 4
+    }
+  ]
+}

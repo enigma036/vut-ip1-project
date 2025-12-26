@@ -8,8 +8,7 @@ include "circomlib/circuits/babyjub.circom";
 template VotingWithIdentity(numCandidates) {
     // Private inputs
     signal input vcAttributes[8]; 
-    signal input skVC; 
-    signal input voteChoice;
+    signal input skVC;
     
     signal input sigR8x;
     signal input sigR8y;
@@ -51,16 +50,6 @@ template VotingWithIdentity(numCandidates) {
     sigVerifier.R8y <== sigR8y;
     sigVerifier.S <== sigS;
     sigVerifier.M <== vcHasher.out;
-
-    component voteInRange1 = GreaterEqThan(32);
-    voteInRange1.in[0] <== voteChoice;
-    voteInRange1.in[1] <== 1;
-    
-    component voteInRange2 = LessEqThan(32);
-    voteInRange2.in[0] <== voteChoice;
-    voteInRange2.in[1] <== numCandidates;
-    
-    voteInRange1.out * voteInRange2.out === 1;
 
     vcAttributes[3] === allowedCity;
     vcAttributes[5] === allowedRegion;

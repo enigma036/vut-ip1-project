@@ -45,8 +45,8 @@
     },
     {
       "id": 4,
-      "name": "FAIL - Vote mimo rozsah (6)",
-      "expectedResult": "FAIL",
+      "name": "VALID - Lucie (vote hodnota uz neni kontrolovana)",
+      "expectedResult": "PASS",
       "voter": {
         "name": "Lucie", "surname": "Horakova", "address": "Stara",
         "city": "444555666", "district": "111222333", "region": "121314151",

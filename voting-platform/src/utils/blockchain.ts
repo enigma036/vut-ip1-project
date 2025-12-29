@@ -110,7 +110,7 @@ export async function castVote(
     return tx.hash;
 }
 
-export async function fetchElectionResults(contractAddress: string, signer: ethers.Signer,): Promise<ElectionData> {
+export async function fetchElectionResults(contractAddress: string, signer: ethers.Signer): Promise<ElectionData> {
     if (!window.ethereum) throw new Error("MetaMask not found");
     
     const sapphireSigner = wrapEthersSigner(signer);

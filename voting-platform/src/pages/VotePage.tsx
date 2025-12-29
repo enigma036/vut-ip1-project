@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { User, FileKey, Vote, Loader2, ShieldCheck, MapPin, Calendar, Building2, Hash, CheckCircle2 } from 'lucide-react';
+import { User, FileKey, Vote, Loader2, ShieldCheck, MapPin, Calendar, Building2, Hash, CheckCircle2, Network } from 'lucide-react';
 import usersData from '../data/users.json';
 import { generateVotingProof } from '../utils/zk';
-import { castVote } from '../utils/blockchain';
+import { castVote, switchNetwork } from '../utils/blockchain';
 import { ethers } from 'ethers';
 
 export default function VotePage() {
     const [selectedUserId, setSelectedUserId] = useState('');
+    const [networkType, setNetworkType] = useState<'testnet' | 'mainnet'>('testnet');
 
     const [electionCriteria, setElectionCriteria] = useState({
         electionId: '',
@@ -63,10 +64,10 @@ export default function VotePage() {
         setIsVoting(true);
         setTxHash('');
 
-        const provider = new ethers.BrowserProvider(window.ethereum);
-        const signer = await provider.getSigner();
-
         try {
+            await switchNetwork(networkType);
+            const provider = new ethers.BrowserProvider(window.ethereum);
+            const signer = await provider.getSigner();
             const hash = await castVote(
                 signer,
                 voteData.contractAddress,
@@ -98,6 +99,34 @@ export default function VotePage() {
     return (
         <div className="flex items-center justify-center p-6 min-h-[calc(100vh-64px)]">
             <div className="w-full max-w-xl">
+                {/* Network Selection */}
+                <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 mb-6 p-4">
+                    <label className="flex items-center gap-2 text-sm font-medium text-zinc-700 mb-3">
+                        <Network className="w-4 h-4 text-zinc-400" />
+                        Select Network
+                    </label>
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => setNetworkType('testnet')}
+                            className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium border transition-all ${networkType === 'testnet'
+                                    ? 'bg-zinc-900 text-white border-zinc-900'
+                                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                                }`}
+                        >
+                            Sapphire Testnet
+                        </button>
+                        <button
+                            onClick={() => setNetworkType('mainnet')}
+                            className={`flex-1 py-2 px-4 rounded-lg text-sm font-medium border transition-all ${networkType === 'mainnet'
+                                    ? 'bg-rose-600 text-white border-rose-600'
+                                    : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-300'
+                                }`}
+                        >
+                            Sapphire Mainnet
+                        </button>
+                    </div>
+                </div>
+
 
                 <div className="mb-8">
                     <h1 className="text-3xl font-light text-zinc-900 mb-2">Cast Your Vote</h1>

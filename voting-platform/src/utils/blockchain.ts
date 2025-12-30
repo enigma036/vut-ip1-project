@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { NETWORKS, CONTRACT_ABI, CONTRACT_BYTECODE } from './config';
+import { NETWORKS, CONTRACT_ABI, CONTRACT_BYTECODE, VERIFIER_ABI, VERIFIER_BYTECODE } from './config';
 import { wrapEthersSigner } from '@oasisprotocol/sapphire-ethers-v6';
 
 export interface ElectionData {
@@ -75,6 +75,24 @@ export async function deployVotingContract(
     return await contract.getAddress();
 }
 
+export async function deployVerifierContract(signer: ethers.Signer): Promise<string> {
+
+    const sapphireSigner = wrapEthersSigner(signer);
+
+    const factory = new ethers.ContractFactory(
+        VERIFIER_ABI,
+        VERIFIER_BYTECODE,
+        sapphireSigner
+    );
+
+    console.log("Deploying verifier contract...");
+    
+    const contract = await factory.deploy();
+    await contract.waitForDeployment();
+
+    return await contract.getAddress();
+}
+
 export function getVotingContract(contractAddress: string, signerOrProvider: ethers.Signer | ethers.Provider) {
     let runner = signerOrProvider;
 
@@ -99,7 +117,7 @@ export async function castVote(
         [proof.pi_b[1][1], proof.pi_b[1][0]]
     ];
     const pC = [proof.pi_c[0], proof.pi_c[1]];
-    
+
     console.log("Submitting Vote Transaction...");
 
     const tx = await contract.vote(pA, pB, pC, publicSignals, candidateId);
@@ -112,7 +130,7 @@ export async function castVote(
 
 export async function fetchElectionResults(contractAddress: string, signer: ethers.Signer): Promise<ElectionData> {
     if (!window.ethereum) throw new Error("MetaMask not found");
-    
+
     const sapphireSigner = wrapEthersSigner(signer);
     const contract = new ethers.Contract(contractAddress, CONTRACT_ABI, sapphireSigner);
 
@@ -120,7 +138,7 @@ export async function fetchElectionResults(contractAddress: string, signer: ethe
     const regionHash = await contract.ALLOWED_REGION();
     const cityHash = await contract.ALLOWED_CITY();
     const endTimeBigInt = await contract.electionEndTime();
-    
+
     const endTimeDate = new Date(Number(endTimeBigInt) * 1000);
     const now = new Date();
     const isActive = now < endTimeDate;

@@ -67,13 +67,13 @@ export default function DeployPage() {
             const zkConfigJSON = {
                 contractAddress: address,
                 electionId: generatedElectionId,
-                allowedCity: cityCode,
-                allowedRegion: regionCode,
-                minBirthDate: birthDateInt,
-                _humanReadable: {
-                    city: formData.city,
-                    region: formData.region,
-                    minDob: formData.minBirthDate
+                allowedCity: formData.city,
+                allowedRegion: formData.region,
+                minBirthDate: formData.minBirthDate,
+                _intFormat: {
+                    city: cityCode,
+                    region: regionCode,
+                    minDob: birthDateInt
                 }
             };
 

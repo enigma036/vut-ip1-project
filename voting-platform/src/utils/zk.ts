@@ -16,7 +16,6 @@ export async function generateVotingProof(
     contractAddress: string
 ): Promise<ProofResult> {
     
-    const skVC = BigInt(userData.keys.sk);
     const pkVCx = BigInt(userData.keys.pk[0]);
     const pkVCy = BigInt(userData.keys.pk[1]);
 
@@ -45,7 +44,6 @@ export async function generateVotingProof(
 
     const inputSignals = {
         vcAttributes: vcAttributes.map(x => x.toString()),
-        skVC: skVC.toString(),
         
         sigR8x: signature.R8x,
         sigR8y: signature.R8y,

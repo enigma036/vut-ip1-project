@@ -8,7 +8,6 @@ include "circomlib/circuits/babyjub.circom";
 template VotingWithIdentity(numCandidates) {
     // Private inputs
     signal input vcAttributes[8]; 
-    signal input skVC;
     
     signal input sigR8x;
     signal input sigR8y;
@@ -29,11 +28,6 @@ template VotingWithIdentity(numCandidates) {
 
     // Outputs
     signal output nullifier;
-
-    component privToPub = BabyPbk();
-    privToPub.in <== skVC;
-    privToPub.Ax === pkVCx;
-    privToPub.Ay === pkVCy;
 
     component vcHasher = Poseidon(10);
     for (var i = 0; i < 8; i++) {
@@ -60,9 +54,10 @@ template VotingWithIdentity(numCandidates) {
     ageCheck.out === 1;
 
     // Nullifier
-    component nullifierHasher = Poseidon(2);
-    nullifierHasher.inputs[0] <== skVC;
-    nullifierHasher.inputs[1] <== electionId;
+    component nullifierHasher = Poseidon(3);
+    nullifierHasher.inputs[0] <== pkVCx;
+    nullifierHasher.inputs[1] <== pkVCy;
+    nullifierHasher.inputs[2] <== electionId;
     nullifier <== nullifierHasher.out;
 }
 

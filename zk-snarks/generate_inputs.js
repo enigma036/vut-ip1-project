@@ -51,7 +51,6 @@ async function main() {
 
         const inputCircuit = {
             "vcAttributes": vcAttributes,
-            "skVC": skVC.toString(),
             
             "sigR8x": F.toObject(signature.R8[0]).toString(),
             "sigR8y": F.toObject(signature.R8[1]).toString(),
